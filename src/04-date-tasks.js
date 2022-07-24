@@ -19,8 +19,8 @@
  *    'Tue, 26 Jan 2016 13:48:02 GMT' => Date()
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
-function parseDataFromRfc2822(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromRfc2822(value) {
+  return new Date(value);
 }
 
 /**
@@ -34,8 +34,8 @@ function parseDataFromRfc2822(/* value */) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
 
 
@@ -53,10 +53,19 @@ function parseDataFromIso8601(/* value */) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
-}
+function isLeapYear(_date) {
+  const date = new Date(_date);
+  const year = date.getFullYear();
+  if (year % 4 !== 0) {
+    return false;
+  }
+  if (year % 100 !== 0) { return true; }
 
+  if (year % 400 === 0) {
+    return true;
+  }
+  return false;
+}
 
 /**
  * Returns the string representation of the timespan between two dates.
@@ -95,9 +104,17 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(/* date */) {
+  // const d = new Date(date);
+  // let Hours = (d.getHours() - 3);
+  // Hours += d.getMinutes() / 60;
+  // if (Hours > 12) { Hours -= 12; }
+  // let HoursDeg = (360 * Hours) / 12;
+  // if (HoursDeg > 180) { HoursDeg -= 180; }
+  // const HoursRad = (HoursDeg * Math.PI) / 180;
+  // const Minutes = 0.0002908882 * d.getMinutes();
+  // return Math.abs(HoursRad - Minutes);
   throw new Error('Not implemented');
 }
-
 
 module.exports = {
   parseDataFromRfc2822,
