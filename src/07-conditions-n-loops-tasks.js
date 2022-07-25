@@ -284,32 +284,24 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
-  // const arr = ccn.toString().split('');
-  // arr.length -= 1;
-  // const len = arr.length;
-  // let number = 0;
-  // let sum = 0;
-
-  // for (let i = len; i > 0;) {
-  //   number = Number(arr[i]);
-
-  //   if (i % 2 === 0) {
-  //     number *= 2;
-
-  //     if (number > 9) {
-  //       number -= 9;
-  //     }
-  //   }
-
-  //   sum += number;
-  //   i -= 1;
-  // }
-  // if (sum % 10 === 0) { return true; }
-  // return false;
+function isCreditCardNumber(ccn) {
+  const numarr = ccn.toString().split('');
+  let start = 0;
+  if (((numarr.length - 1) % 2) === 0) { start = 1; }
+  for (let i = start; i < numarr.length;) {
+    let res = 2 * numarr[i];
+    if (res > 9) {
+      res -= 9;
+    }
+    numarr[i] = res;
+    i += 2;
+  }
+  const sum = numarr.reduce((a, b) => a + 1 * b, 0);
+  if (sum % 10 === 0) {
+    return true;
+  }
+  return false;
 }
-
 /**
  * Returns the digital root of integer:
  *   step1 : find sum of all digits
@@ -358,10 +350,26 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
-}
+function isBracketsBalanced(str) {
+  let s = str;
 
+  function repl() {
+    const t = s;
+    s = s.replace('[]', '');
+    s = s.replace('{}', '');
+    s = s.replace('()', '');
+    s = s.replace('<>', '');
+    if (s.length !== t.length) {
+      return repl();
+    }
+    return t;
+  }
+  repl();
+  if (s.length === 0) {
+    return true;
+  }
+  return false;
+}
 
 /**
  * Returns the string with n-ary (binary, ternary, etc, where n <= 10)
@@ -383,8 +391,17 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  function func(numm, nm) {
+    if (numm < nm) { return numm.toString(); }
+
+    const f = Math.floor(numm / nm);
+    return (numm - f * nm).toString() + func(f, nm).toString();
+  }
+  let t = func(num, n);
+  t = t.toString().split('');
+  t = t.reverse();
+  return t.join('');
 }
 
 
@@ -423,8 +440,26 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  const ml1 = m1.length;
+
+  for (let i = 0; i < ml1;) {
+    result[i] = [];
+    const m2l = m2[0].length;
+    for (let j = 0; j < m2l;) {
+      let sum = 0;
+      const m1l0 = m1[0].length;
+      for (let k = 0; k < m1l0;) {
+        sum += m1[i][k] * m2[k][j];
+        k += 1;
+      }
+      result[i][j] = sum;
+      j += 1;
+    }
+    i += 1;
+  }
+  return result;
 }
 
 
@@ -458,8 +493,26 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const p = position;
+  for (let i = 0; i < 3; i) {
+    const t1 = p[i][0] + p[i][1] + p[i][2];
+    const t2 = p[0][i] + p[1][i] + p[2][i];
+    if (t1 === 'XXX') { return 'X'; }
+    if (t1 === '000') { return '0'; }
+    if (t2 === 'XXX') { return 'X'; }
+    if (t2 === '000') { return '0'; }
+    i += 1;
+  }
+
+  //
+  const t3 = p[0][0] + p[1][1] + p[2][2];
+  const t4 = p[0][2] + p[1][1] + p[2][0];
+  if (t3 === 'XXX') { return 'X'; }
+  if (t3 === '000') { return '0'; }
+  if (t4 === 'XXX') { return 'X'; }
+  if (t4 === '000') { return '0'; }
+  return undefined;
 }
 
 

@@ -82,8 +82,31 @@ function isLeapYear(_date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  const date1 = startDate;
+  const date2 = endDate;
+  let diffTime = Math.abs(date2 - date1);
+  let hours = diffTime / 3600e3;
+  hours = Math.floor(hours);
+  diffTime -= (hours * 3600e3);
+  let minutes = diffTime / (60e3); minutes = Math.floor(minutes);
+  diffTime -= (minutes * 60e3);
+  let seconds = diffTime / (1000); seconds = Math.floor(seconds);
+  let miliseconds = diffTime - (seconds * 1e3);
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(seconds);
+  date.setMilliseconds(miliseconds);
+  hours = hours < 10 ? `0${hours.toString()}` : hours;
+  minutes = minutes < 10 ? `0${minutes.toString()}` : minutes;
+  seconds = seconds < 10 ? `0${seconds.toString()}` : seconds;
+  if (miliseconds < 10) {
+    miliseconds = `00${miliseconds.toString()}`;
+  } else if (miliseconds < 100) {
+    miliseconds = `0${miliseconds.toString()}`;
+  }
+  return `${hours}:${minutes}:${seconds}.${miliseconds}`;
 }
 
 
@@ -103,18 +126,25 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  // const d = new Date(date);
-  // let Hours = (d.getHours() - 3);
-  // Hours += d.getMinutes() / 60;
-  // if (Hours > 12) { Hours -= 12; }
-  // let HoursDeg = (360 * Hours) / 12;
-  // if (HoursDeg > 180) { HoursDeg -= 180; }
-  // const HoursRad = (HoursDeg * Math.PI) / 180;
-  // const Minutes = 0.0002908882 * d.getMinutes();
-  // return Math.abs(HoursRad - Minutes);
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const d = new Date(date);
+
+  let Hours = (d.getHours() - 3);
+  if (Hours < 0) { Hours += 24; }
+  Hours += d.getMinutes() / 60;
+  if (Hours > 12) { Hours -= 12; }
+  const HoursDeg = (360 * Hours) / 12;
+  const Minutes = d.getMinutes();
+  const minutesDegrees = (360 * Minutes) / 60;
+
+  let t = (HoursDeg - minutesDegrees);
+  t = Math.abs(t);
+  if (t > 180) { t -= 180; }
+  t = Number(t.toFixed(5));
+  if (t > 180) { t -= 180; }
+  return Math.abs(t * (Math.PI / 180));
 }
+
 
 module.exports = {
   parseDataFromRfc2822,
